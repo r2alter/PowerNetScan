@@ -8,6 +8,8 @@ Script perform simple TCP port scanning using multithreading.
   - [Prerequisites](#prerequisites)
 - [Usage](#usage)
 - [Acknowledgments](#acknowledgments)
+- [ToDo](#todo)
+- [Licence](#licence)
 
 ## Project Overview
 
@@ -21,7 +23,7 @@ I wrote another PowerShell port scanner because I didn't find any script which w
 
 Just download script and load it as module.
 
-```(New-Object System.Net.WebClient).DownloadString('<GITHUBLNK>') | IEX```
+```(New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/r2alter/PowerNetScan/main/PowerNetScan.ps1') | IEX```
 
 ### Prerequisites
 
@@ -119,7 +121,7 @@ Task finished at 12/19/2023 10:32:05 and scanning time was: 6 seconds, 96 millis
 
 Thanks a lot! I was inspired by the project ```https://github.com/BornToBeRoot/PowerShell_IPv4PortScanner/blob/main/Scripts/IPv4PortScan.ps1``` in terms of multithreading.
 
-## To Do
+## ToDo
 
 I want to add UDP scan functionality. If I will find proper use case I add more formats of file output like JSON or XML. 
 

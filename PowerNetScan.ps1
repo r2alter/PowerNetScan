@@ -399,7 +399,7 @@ function Invoke-TCPPortScan{
         Task finished at 12/19/2023 10:32:05 and scanning time was: 6 seconds, 96 milliseconds.
     
     .LINK
-        <<GITHUB LINK>>
+        https://github.com/r2alter/PowerNetScan
 
     #>
     [CmdletBinding()]

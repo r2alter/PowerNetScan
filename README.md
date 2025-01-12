@@ -13,11 +13,11 @@ Script perform simple TCP port scanning using multithreading.
 
 ## Project Overview
 
-Script perform TCP port scanning based on asynchronous connection. It is used TcpClient object from System.Net.Sockets assemlby.
-Before starting TCP scanning hostInputs list and port scope is validating. It is possible to pass hosts list via argument OR file.
+Script performs TCP port scanning based on an asynchronous connection. It is used TcpClient object from System.Net.Sockets assembly.
+Before starting TCP scanning the whole scope (hosts and ports) is validated. It is possible to pass hosts list via argument OR file.
 There are three types to show results - console output, save to file or retrun object.
 
-I wrote another PowerShell port scanner because I didn't find any script which would meet my expectations. This script accept various types of input (similar to Nmap) and also provided a few types of output. What is more it supports live results which allows user to start enumerate services before scan would finish. 
+More detalied explanation at https://r2alter.github.io/PowerNetScan/
 
 ## Getting Started
 
@@ -119,11 +119,12 @@ Task finished at 12/19/2023 10:32:05 and scanning time was: 6 seconds, 96 millis
 
 ## Acknowledgments
 
-Thanks a lot! I was inspired by the project ```https://github.com/BornToBeRoot/PowerShell_IPv4PortScanner/blob/main/Scripts/IPv4PortScan.ps1``` in terms of multithreading.
+Thanks a lot! I was inspired by the project https://github.com/BornToBeRoot/PowerShell_IPv4PortScanner/blob/main/Scripts/IPv4PortScan.ps1 in terms of multithreading.
 
-## ToDo
+## To Do
 
 I want to add UDP scan functionality. If I will find proper use case I add more formats of file output like JSON or XML. 
+There is also idea to add support of IPv6.
 
 ## Licence 
 

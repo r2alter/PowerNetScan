@@ -84,9 +84,9 @@ Did NOT perform ping check.
 ```
 
 ```
-PS> Invoke-TCPPortScan -HostsFile ./test_scope.txt -Threads 50 -Timeout 0.5 -ShowScope -ObjectOutput -FileOutput results.txt
+PS> Invoke-TCPPortScan -HostsFile ./test_scope.txt -Threads 50 -Timeout 0.5 -ObjectOutput -FileOutput results.txt
 
-PowerNetScan started at: 12/19/2023 10:18:28 with command: Invoke-TCPPortScan -HostsFile ./test_scope.txt -Threads 50 -Timeout 0.5 -ShowScope True -ObjectOutput True -FileOutput results.txt 
+PowerNetScan started at: 12/19/2023 10:18:28 with command: Invoke-TCPPortScan -HostsFile ./test_scope.txt -Threads 50 -Timeout 0.5 -ObjectOutput True -FileOutput results.txt 
 Task finished at 12/19/2023 10:18:48 and scanning time was: 20 seconds, 83 milliseconds.
 
 

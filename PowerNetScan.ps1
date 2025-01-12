@@ -4,7 +4,7 @@ function Format-ConsoleOutput{
         Helper function for format output.
 
     .DESCRIPTION
-        Helper function which check if target object has hostname attribute set and modify output string. 
+        Helper function which check if target object has hostname attribute set and modify output string.
         Information about object with hostname will be displayed with this hostname.
 
     #>
@@ -67,7 +67,7 @@ function Format-Hosts{
         Helper function for format input.
 
     .DESCRIPTION
-        Helper function which check Hosts parameter and format it to array of target objects 
+        Helper function which check Hosts parameter and format it to array of target objects
         which contain ip address and hostname (if exists) of target.
 
     #>
@@ -83,7 +83,7 @@ function Format-Hosts{
         if($hostInput -match "^(([01]?\d?\d|2[0-4]\d|25[0-5])\.){3}([01]?\d?\d|2[0-4]\d|25[0-5])-([01]?\d?\d|2[0-4]\d|25[0-5])$"){
             $range = $hostInput.Split(".")[3].Split("-")
             if($range[0] -lt $range[1]){
-                $prefix = $hostInput.Substring(0, $hostInput.LastIndexOf(".") + 1) # get first three octets 
+                $prefix = $hostInput.Substring(0, $hostInput.LastIndexOf(".") + 1) # get first three octets
                 ForEach($singleHost in $range[0]..$range[1]){
                     $target = [PSCustomObject]@{
                         IPAddress = ($prefix + $singleHost)
@@ -96,7 +96,7 @@ function Format-Hosts{
             else {
                 Write-Host "Bad range input *${hostInput}* Not added to scan scope."
             }
-            
+
         }
         # case 10.1.4-5.1
         elseif($hostInput -match "^(([01]?\d?\d|2[0-4]\d|25[0-5])\.){2}([01]?\d?\d|2[0-4]\d|25[0-5])-([01]?\d?\d|2[0-4]\d|25[0-5])\.([01]?\d?\d|2[0-4]\d|25[0-5])$"){
@@ -116,7 +116,7 @@ function Format-Hosts{
             else {
                 Write-Host "Bad range input *${hostInput}* Not added to scan scope."
             }
-            
+
         }
         # case 10.4-5.1.1
         elseif ($hostInput -match "^(([01]?\d?\d|2[0-4]\d|25[0-5])\.)([01]?\d?\d|2[0-4]\d|25[0-5])-([01]?\d?\d|2[0-4]\d|25[0-5])\.([01]?\d?\d|2[0-4]\d|25[0-5])\.([01]?\d?\d|2[0-4]\d|25[0-5])$") {
@@ -137,7 +137,7 @@ function Format-Hosts{
             else {
                 Write-Host "Bad range input *${hostInput}* Not added to scan scope."
             }
-            
+
         }
         # case 20-23.1.1.1
         elseif ($hostInput -match "^([01]?\d?\d|2[0-4]\d|25[0-5])-([01]?\d?\d|2[0-4]\d|25[0-5])\.(([01]?\d?\d|2[0-4]\d|25[0-5])\.){2}([01]?\d?\d|2[0-4]\d|25[0-5])$") {
@@ -157,7 +157,7 @@ function Format-Hosts{
             else {
                 Write-Host "Bad range input *${hostInput}* Not added to scan scope."
             }
-            
+
         }
         # case 10.0.0.0/8
         elseif ($hostInput -match "^(([01]?\d?\d|2[0-4]\d|25[0-5])\.){3}([01]?\d?\d|2[0-4]\d|25[0-5])\/([12]?\d|3[0-2])$") {
@@ -195,7 +195,7 @@ function Format-Hosts{
                     $result += $target
 
                 }
-                
+
             }
         }
         # case 10.2.1.1
@@ -205,7 +205,7 @@ function Format-Hosts{
                 Hostname = [String]::Empty
                 OpenPorts = [System.Collections.ArrayList]@()
             }
-            
+
             $result += $target
         }
         # case - any hostname like google.com
@@ -251,13 +251,13 @@ function Format-HostsFile {
     .DESCRIPTION
         Helper function which check HostsFile parameter - if files exists, read files treated each line as entry
         to target poll and format it to array of target objects which contain ip address and hostname of target.
-        
+
     #>
 
     $result = [System.Collections.ArrayList]@()
 
     foreach($File in $HostsFiles){
-        # check if file exists 
+        # check if file exists
         if(Test-Path $File -PathType Leaf){
             # parse all lines in files and add to result array
             foreach($line in Get-Content $File){
@@ -278,12 +278,12 @@ function Format-Ports{
 
     .DESCRIPTION
         Helper function which check Ports parameter and format it to array of port numbers.
-        
+
     #>
     param(
         $inputPorts
     )
-    
+
     $result = [System.Collections.ArrayList]@()
 
     foreach($ports in $inputPorts){
@@ -297,7 +297,7 @@ function Format-Ports{
             }
         }
     }
-    
+
     return ($result | Sort-Object -Unique)
 }
 
@@ -307,20 +307,20 @@ function Invoke-TCPPortScan{
         Script perform simple TCP port scanning using multithreading.
 
     .DESCRIPTION
-        Script perform TCP port scanning based on asynchronous connection. It is used TcpClient object from System.Net.Sockets assemlby.
-        Before starting TCP scanning hostInputs list and port scope is validating. It is possible to pass hosts list via argument OR file.
-        There are three types to show results - console output, save to file or retrun object.
+        Script performs TCP port scanning based on an asynchronous connection. It is used TcpClient object from System.Net.Sockets assembly.
+        Before starting TCP scanning host and port scope is validated. It is possible to pass hosts list via argument OR file.
+        There are three types to show results - console output, save to file or return object.
 
     .OUTPUTS
-        Objects have three attributes: 
+        Objects have three attributes:
         IP address - String
-        Hostname - String 
-        OpenPorts - System Array with Strings 
+        Hostname - String
+        OpenPorts - System Array with Strings
 
     .EXAMPLE
         Invoke-TCPPortScan -Hosts google.com,amazon.com -Threads 50
 
-        PowerNetScan started at: 12/19/2023 09:37:40 with command: Invoke-TCPPortScan -Hosts google.com,amazon.com -Threads 50 
+        PowerNetScan started at: 12/19/2023 09:37:40 with command: Invoke-TCPPortScan -Hosts google.com,amazon.com -Threads 50
         Task finished at 12/19/2023 09:37:50 and scanning time was: 9 seconds, 863 milliseconds.
 
         PowerNetScan scan results:
@@ -345,12 +345,12 @@ function Invoke-TCPPortScan{
         -----------
 
     .EXAMPLE
-        Invoke-TCPPortScan -Hosts google.com -Ports 21,22,80,443,8080 -Verbose 
+        Invoke-TCPPortScan -Hosts google.com -Ports 21,22,80,443,8080 -Verbose
 
         VERBOSE: Parsing input.
         VERBOSE: Source of targets - script argument.
         VERBOSE: Scan scope summary: 1 hosts / 5 portInvoke-TCPPortScan -Hosts google.com -Ports 21,22,80,443,8080 -Verbose s.
-        PowerNetScan started at: 12/19/2023 09:45:46 with command: Invoke-TCPPortScan -Hosts google.com -Ports 21,22,80,443,8080 -Verbose True 
+        PowerNetScan started at: 12/19/2023 09:45:46 with command: Invoke-TCPPortScan -Hosts google.com -Ports 21,22,80,443,8080 -Verbose True
         VERBOSE: +-------------- LIVE RESULTS -------------------+
         VERBOSE: 142.250.186.206 (google.com) - port 443 open.
         VERBOSE: 142.250.186.206 (google.com) - port 80 open.
@@ -369,7 +369,7 @@ function Invoke-TCPPortScan{
     .EXAMPLE
         Invoke-TCPPortScan -HostsFile ./test_scope.txt -Threads 50 -Timeout 0.5 -ShowScope -ObjectOutput -FileOutput results.txt
 
-        PowerNetScan started at: 12/19/2023 10:18:28 with command: Invoke-TCPPortScan -HostsFile ./test_scope.txt -Threads 50 -Timeout 0.5 -ShowScope True -ObjectOutput True -FileOutput results.txt 
+        PowerNetScan started at: 12/19/2023 10:18:28 with command: Invoke-TCPPortScan -HostsFile ./test_scope.txt -Threads 50 -Timeout 0.5 -ShowScope True -ObjectOutput True -FileOutput results.txt
         Task finished at 12/19/2023 10:18:48 and scanning time was: 20 seconds, 83 milliseconds.
 
 
@@ -391,72 +391,72 @@ function Invoke-TCPPortScan{
         VERBOSE: Parsing input.
         VERBOSE: Source of targets - script argument.
         VERBOSE: Scan scope summary: 254 hosts / 1 ports.
-        PowerNetScan started at: 12/19/2023 10:31:59 with command: Invoke-TCPPortScan -Hosts 192.168.88.0/24 -Ports 80 -Threads 50 -Verbose True -ObjectOutput True 
+        PowerNetScan started at: 12/19/2023 10:31:59 with command: Invoke-TCPPortScan -Hosts 192.168.88.0/24 -Ports 80 -Threads 50 -Verbose True -ObjectOutput True
         VERBOSE: +-------------- LIVE RESULTS -------------------+
         VERBOSE: 192.168.88.183 - port 80 open.
         VERBOSE: 192.168.88.2 - port 80 open.
         VERBOSE: +-----------------------------------------------+
         Task finished at 12/19/2023 10:32:05 and scanning time was: 6 seconds, 96 milliseconds.
-    
+
     .LINK
         https://github.com/r2alter/PowerNetScan
 
     #>
     [CmdletBinding()]
     param(
-    # Targets to scan - ip addresses, ip address ranges, hostnames. It should be separated using comma. 
-    # This parameter accept arrays of strings also.
-    [Parameter(Mandatory = $true, 
+    # Targets to scan - IP addresses, IP address ranges, hostnames. It should be separated using a comma.
+    # This parameter accepts arrays of strings also.
+    [Parameter(Mandatory = $true,
     ParameterSetName = "ShellInput")]
-    [Parameter(Mandatory = $false, 
+    [Parameter(Mandatory = $false,
     ParameterSetName = "NoShellInput")]
     $Hosts,
 
-    # Filename contains targets to scan. Evety line in file is treated as one ip address, ip address range or hostname.
-    [Parameter(Mandatory = $false, 
+    # Filename contains targets to scan. Every line in a file is treated as one IP address, IP address range or hostname.
+    [Parameter(Mandatory = $false,
     ParameterSetName = "ShellInput")]
-    [Parameter(Mandatory = $true, 
+    [Parameter(Mandatory = $true,
     ParameterSetName = "NoShellInput")]
     $HostsFile,
 
     # Array of ports which will be scanned. Default - top 250 from nmap
     # cat /usr/share/nmap/nmap-services | grep /tcp | sort -k3 -r -n | head -250 | awk '{ print $2}' | sed 's/\/tcp/,/g' | tr '\n' ' '
-    $Ports=@(80, 23, 443, 21, 22, 25, 3389, 110, 445, 139, 143, 53, 135, 3306, 8080, 1723, 111, 995, 993, 5900, 1025, 587, 
-        8888, 199, 1720, 465, 548, 113, 81, 6001, 10000, 514, 5060, 179, 1026, 2000, 8443, 8000, 32768, 554, 26, 1433, 
-        49152, 2001, 515, 8008, 49154, 1027, 5666, 646, 5000, 5631, 631, 49153, 8081, 2049, 88, 79, 5800, 106, 2121, 1110, 
+    $Ports=@(80, 23, 443, 21, 22, 25, 3389, 110, 445, 139, 143, 53, 135, 3306, 8080, 1723, 111, 995, 993, 5900, 1025, 587,
+        8888, 199, 1720, 465, 548, 113, 81, 6001, 10000, 514, 5060, 179, 1026, 2000, 8443, 8000, 32768, 554, 26, 1433,
+        49152, 2001, 515, 8008, 49154, 1027, 5666, 646, 5000, 5631, 631, 49153, 8081, 2049, 88, 79, 5800, 106, 2121, 1110,
         49155, 6000, 513, 990, 5357, 427, 49156, 543, 544, 5101, 144, 7, 389, 8009, 3128, 444, 9999, 5009, 7070, 5190, 3000,
         5432, 1900, 3986, 13, 1029, 9, 6646, 5051, 49157, 1028, 873, 1755, 2717, 4899, 9100, 119, 37, 1000, 3001, 5001, 82,
-        10010, 1030, 9090, 2107, 1024, 2103, 6004, 1801, 5050, 19, 8031, 1041, 255, 1056, 1049, 1065, 2967, 1053, 1048, 
-        1064, 1054, 3703, 17, 808, 3689, 1031, 1044, 1071, 5901, 100, 9102, 8010, 1039, 4001, 2869, 9000, 5120, 2105, 636, 
-        1038, 2601, 1, 7000, 1066, 1069, 625, 311, 280, 254, 4000, 1761, 5003, 2002, 1998, 2005, 1032, 1050, 6112, 3690, 
-        1521, 2161, 6002, 1080, 2401, 4045, 902, 787, 7937, 1058, 2383, 32771, 1059, 1040, 1033, 50000, 5555, 10001, 1494, 
-        593, 3, 2301, 7938, 3268, 1234, 1022, 1074, 9001, 8002, 1036, 1035, 1037, 464, 1935, 497, 6666, 2003, 6543, 24, 
-        1352, 3269, 1111, 407, 500, 20, 2006, 1034, 3260, 15000, 1218, 4444, 264, 2004, 33, 42510, 1042, 3052, 999, 1023, 
-        222, 1068, 7100, 888, 563, 1717, 992, 32770, 2008, 32772, 7001, 2007, 8082, 5550, 5801, 2009, 512, 1043, 50001, 
+        10010, 1030, 9090, 2107, 1024, 2103, 6004, 1801, 5050, 19, 8031, 1041, 255, 1056, 1049, 1065, 2967, 1053, 1048,
+        1064, 1054, 3703, 17, 808, 3689, 1031, 1044, 1071, 5901, 100, 9102, 8010, 1039, 4001, 2869, 9000, 5120, 2105, 636,
+        1038, 2601, 1, 7000, 1066, 1069, 625, 311, 280, 254, 4000, 1761, 5003, 2002, 1998, 2005, 1032, 1050, 6112, 3690,
+        1521, 2161, 6002, 1080, 2401, 4045, 902, 787, 7937, 1058, 2383, 32771, 1059, 1040, 1033, 50000, 5555, 10001, 1494,
+        593, 3, 2301, 7938, 3268, 1234, 1022, 1074, 9001, 8002, 1036, 1035, 1037, 464, 1935, 497, 6666, 2003, 6543, 24,
+        1352, 3269, 1111, 407, 500, 20, 2006, 1034, 3260, 15000, 1218, 4444, 264, 2004, 33, 42510, 1042, 3052, 999, 1023,
+        222, 1068, 7100, 888, 563, 1717, 992, 32770, 2008, 32772, 7001, 2007, 8082, 5550, 5801, 2009, 512, 1043, 50001,
         2701, 1700, 7019, 4662, 2065, 2010, 42, 161, 2602),
-    
-    # Time to wait for response from target
+
+    # Time in seconds to wait for a response from target
     [float]$Timeout=1,
 
     # Number of threads
     [int]$Threads=2,
-    
-    # Switch to write to output all target machines and scanned ports.
+
+    # Switch to the whole scope (hosts and ports) after input validation.
     [switch]$ShowScope,
 
-    # Switch to force write results to console output, works only with FileOutput parameter.
+    # Switch to force write results to console output.
     [switch]$ConsoleOutput,
 
     # Switch to export results of scan as array of PowerShell objects.
     [switch]$ObjectOutput,
 
     # Path to file where save results.
-    [string]$FileOutput    
-    )      
+    [string]$FileOutput
+    )
 
     #####
      ###
-      #   Input validation  
+      #   Input validation
 
     Write-Verbose "Parsing input."
 
@@ -469,10 +469,10 @@ function Invoke-TCPPortScan{
         Write-Verbose "Source of targets - file(s): ${HostsFile}"
        $targets = Format-HostsFile $HostsFile
     }
-    
+
     # Format ports input.
     $portScope = Format-Ports $Ports
-    
+
     # Check if Hosts or Ports scope is empty after formating.
     if($null -eq $targets){
         Write-Host "[!] After parsing HOSTS parameter, targets scope are empty. Check input. [!]" -ForegroundColor Red
@@ -490,27 +490,27 @@ function Invoke-TCPPortScan{
             ForEach($target in $targets){
                 Write-Verbose "$(Format-ConsoleOutput $target)"
                 }
-                
+
             Write-Verbose "Ports: ${portScope}"
     }
-   
-    # Scanning scope summary
-    Write-Verbose "Scan scope summary: $($targets.Count) hosts / $($portScope.Count) ports."  
-    
 
-    # Check if user use output parameters 
+    # Scanning scope summary
+    Write-Verbose "Scan scope summary: $($targets.Count) hosts / $($portScope.Count) ports."
+
+
+    # Check if user use output parameters
     if(-Not ($FileOutput -Or $ObjectOutput -Or $PSCmdlet.MyInvocation.BoundParameters["FileOutput"])){
-        # If user dont use output parameters - console output default  
+        # If user dont use output parameters - console output default
         $ConsoleOutput = $true
     }
     elseif($PSCmdlet.MyInvocation.BoundParameters["FileOutput"]){
-        # If user used file output parameter 
+        # If user used file output parameter
         if(Test-Path $FileOutput -PathType Leaf){
-            # If file already exists 
+            # If file already exists
             while($response -ne "Y" -And $response -ne "y" -And $response -ne "N" -And $response -ne "n"){
                 $response = Read-Host "The file ${FileOutput} already exists. Do you want to override it? (Y/N)"
             }
-                
+
             if($response -eq "Y" -Or $response -eq "y"){
                 $FileValidation = $true
             }
@@ -541,12 +541,12 @@ function Invoke-TCPPortScan{
             New-Item -Path $FileOutput -ItemType File > $null
         }
         else{
-            # If path to output file is invalid 
+            # If path to output file is invalid
             # Ask to contiune with console output
             while($response -ne "Y" -And $response -ne "y" -And $response -ne "N" -And $response -ne "n"){
                 $response = Read-Host "The path ${FileOutput} do not exists. Do you want to continue with console output? (Y/N)"
             }
-                
+
             if($response -eq "Y" -Or $response -eq "y"){
                 $ConsoleOutput = $true
             }
@@ -562,7 +562,7 @@ function Invoke-TCPPortScan{
     #####
      ###
       #   Scanning block
-    
+
     # Get start time
     $startTime = Get-Date
 
@@ -600,7 +600,7 @@ function Invoke-TCPPortScan{
         if($connection.Status -eq "RanToCompletion"){
             $result.Status = $true
         }
-        
+
         $result
     }
 
@@ -608,7 +608,7 @@ function Invoke-TCPPortScan{
     $RunspacePool = [System.Management.Automation.Runspaces.RunspaceFactory]::CreateRunspacePool(1, $Threads, $Host)
     $RunspacePool.Open()
     [System.Collections.ArrayList]$Jobs = @()
-    
+
 
     # Live results if verbose
     Write-Verbose "+-------------- LIVE RESULTS -------------------+"
@@ -616,10 +616,10 @@ function Invoke-TCPPortScan{
     ForEach($target in $targets){
 
         # For randomize order of port scanning
-        $portScope = $portScope | Get-Random -Count $portScope.Count 
-            
-        ForEach($port in $portScope){  
-    
+        $portScope = $portScope | Get-Random -Count $portScope.Count
+
+        ForEach($port in $portScope){
+
             # Prepare parameters for TCP Scan Script Block
             $ScanParameters = @{
                 targetIPAddress = $target.IPAddress
@@ -630,7 +630,7 @@ function Invoke-TCPPortScan{
             # Create job and add to Runspace pool
             $Job = [System.Management.Automation.PowerShell]::Create().AddScript($ScanTCPScriptBlock).AddParameters($ScanParameters)
             $Job.RunspacePool = $RunspacePool
-            
+
             # Create object for saving job results and add to array
             $JobResultsObject = [PSCustomObject]@{
                 Indicator = $Job
@@ -650,7 +650,7 @@ function Invoke-TCPPortScan{
             continue
         }
         else{
-            # Remove finished jobs from job array and check results. 
+            # Remove finished jobs from job array and check results.
             # If port open add data to targets array
             foreach($JobInProcess in $JobsDone){
 
@@ -659,7 +659,7 @@ function Invoke-TCPPortScan{
                 $Jobs.Remove($JobInProcess)
 
                 if($JobResults.Status){
-                    # find target which result is connected with    
+                    # find target which result is connected with
                     $foundTarget = $targets | Where-Object { $_.IPAddress -eq  $JobResults.IPAddress }
                     Write-Verbose "$(Format-ConsoleOutput $foundTarget) - port $($JobResults.Port) open."
                     $foundTarget.OpenPorts += $JobResults.Port
@@ -673,22 +673,22 @@ function Invoke-TCPPortScan{
     # Get finish time
     $finishTime = Get-Date
     Write-Verbose "+-----------------------------------------------+"
-   
+
     #####
      ###
       #   Show results
-    
+
     # Show finish info
     Write-Host "Task finished at ${finishTime} and scanning time was: $(Get-ScanningTime $startTime $finishTime)"
     Write-Host
 
-    # Console output 
+    # Console output
     if($ConsoleOutput){
         Write-Host "PowerNetScan scan results:"
         Write-Host "Totally scanned $($targets.Count) hosts."
         Write-Host "Did NOT perform ping check."
         Write-Host
-    
+
         ForEach($target in $targets){
             If($target.OpenPorts.Count){
                 Write-Host "$(Format-ConsoleOutput $target) open ports:"
@@ -696,7 +696,7 @@ function Invoke-TCPPortScan{
                     Write-Host $port
                 }
             }
-            else{                   
+            else{
                 Write-Host "No open ports detected for $(Format-ConsoleOutput $target)"
             }
             Write-Host "-----------"
@@ -705,7 +705,7 @@ function Invoke-TCPPortScan{
 
     # File output
     if($FileValidation){
-        "PowerNetScan scan results:" | Out-File $FileOutput 
+        "PowerNetScan scan results:" | Out-File $FileOutput
         "Totally scanned $($targets.Count) hosts." | Out-File $FileOutput -Append
         "Did NOT perform ping check." | Out-File $FileOutput -Append
         "" | Out-File $FileOutput -Append
@@ -717,7 +717,7 @@ function Invoke-TCPPortScan{
                     $port | Out-File $FileOutput -Append
                 }
             }
-            else{                   
+            else{
                  "No open ports detected for $(Format-ConsoleOutput $target)" | Out-File $FileOutput -Append
             }
              "-----------" | Out-File $FileOutput -Append
@@ -728,5 +728,5 @@ function Invoke-TCPPortScan{
     if($ObjectOutput){
         return $targets
     }
-    
+
 }
